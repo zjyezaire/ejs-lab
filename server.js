@@ -51,6 +51,7 @@ const RESTAURANT = {
   ]
 }
 
+//const main = menu.filter()
 
 app.get('/', (req, res) => {
   res.render('home.ejs',  RESTAURANT );
@@ -61,8 +62,34 @@ app.get('/menu', (req, res) => {
 
 })
 
-app.get('/menu/:mains', (req,res) => {
-  res.render
-})
+app.get('/menu/mains', (req, res) => {
+  const mains = RESTAURANT.menu.filter(item => item.category.toLowerCase() === 'mains');
+  res.render('mains.ejs', { menu: mains });
+});
+
+app.get('/menu/desserts', (req, res) => {
+  const desserts = RESTAURANT.menu.filter(item => item.category.toLowerCase() === 'desserts');
+  res.render('desserts.ejs', { menu: desserts });
+});
+
+app.get('/menu/sides', (req, res) => {
+  const sides = RESTAURANT.menu.filter(item => item.category.toLowerCase() === 'sides');
+  res.render('sides.ejs', { menu: sides });
+});
+
+
+
+app.get('/category/:category', (req, res) => {
+  const category = req.params.category.toLowerCase(); // Get the category from the URL parameter
+
+  // Filter the menu based on the category
+  const filteredMenu = RESTAURANT.menu.filter(item => item.category.toLowerCase() === category);
+
+  // Capitalize the first letter of the category for UI
+  const capitalizedCategory = category.charAt(0).toUpperCase() + category.slice(1);
+
+  // Pass the filtered data and category to the view
+  res.render('category', { menuItems: filteredMenu, category: capitalizedCategory });
+});
 
 app.listen(3000);
